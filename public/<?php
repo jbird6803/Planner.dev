@@ -1,0 +1,21 @@
+<?php
+
+class ListItems {
+
+	public $items = [];
+	public $filename = '';
+
+	function saveList($items, $filename) {
+		$handle = fopen()
+	}
+	function openList($filename)  {
+		//code to open list
+	}
+
+}
+
+$todoList = new ListItems();
+$todoList->filename = 'list.txt';
+
+
+?>

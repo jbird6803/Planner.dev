@@ -1,0 +1,14 @@
+h2 {
+    text-decoration: underline;
+}
+
+body {
+	background-image: url('/images/space.jpg');
+	font-family: fantasy;
+	color: white;
+	background-size: 1000px 800px
+}
+
+ul {
+	list-style: tibetan;
+}

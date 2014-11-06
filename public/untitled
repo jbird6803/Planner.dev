@@ -1,0 +1,219 @@
+<?php
+
+$filename = './csv/address_book.csv';
+$addressBook = openFile($filename);
+
+function openFile($filename = './csv/address_book.csv') {
+
+	$handle = fopen($filename, 'r');
+	$addressBook = [];
+
+	while(!feof($handle)) {
+	    $row = fgetcsv($handle);
+
+	    if (!empty($row)) {
+	        $addressBook[] = $row;
+	    }
+	}
+	fclose($handle);
+	return $addressBook;
+}
+
+function save_to_file($addressBook, $filename = './csv/address_book.csv') {
+	
+	$handle = fopen($filename, 'w');
+	foreach ($addressBook as $row) {
+		fputcsv($handle, $row);
+	}
+	fclose($handle);
+}
+
+function removeContact($addressBook, $contact) {
+	unset($addressBook[$contact]);
+	$addressBook = array_values($addressBook);
+	// $handle = fopen($filename, 'w');
+	// foreach ($addressBook as $contact) {
+	// 	fputcsv($handle, $contact);
+	// }
+	// fclose($handle);
+	return $addressBook;
+	// save_to_file($addressBook);
+
+	// header("Location: ./csv/address_book.csv");
+}
+
+if(isset($_GET['id'])) {
+	$contactToRemove = $_GET['id'];
+	removeContact($addressBook, $contactToRemove);
+	save_to_file($addressBook);
+}
+
+if (!empty($_POST)) {
+
+	if(empty($_POST['name']) || empty($_POST['address']) || empty($_POST['city']) || empty($_POST['state']) || empty($_POST['zip']) || empty($_POST['phone'])) {
+
+		$error = "Please input all fields.";
+	
+	} else {
+		
+		if (isset($_POST['name'])) {
+			$newEntry['name'] = $_POST['name'];
+		}
+		if (isset($_POST['address'])) {
+			$newEntry['address'] = $_POST['address'];
+		}
+		if (isset($_POST['city'])) {
+			$newEntry['city'] = $_POST['city'];
+		}
+		if (isset($_POST['state'])) {
+			$newEntry['state'] = strtoupper($_POST['state']);
+		}	
+		if (isset($_POST['zip'])) {
+			$newEntry['zip'] = $_POST['zip'];
+		}
+		if (isset($_POST['phone'])) {
+			$newEntry['phone'] = $_POST['phone'];
+		}
+		$addressBook[] = $newEntry;
+		save_to_file($addressBook);
+	}
+}
+
+
+
+?>
+
+<html>
+<head>
+	<title>Address Book</title>
+</head>
+<body>
+
+	<h1>Contacts</h1>
+	
+	<table>
+		<tr>
+			<th>Name</th>
+			<th>Address</th>
+			<th>City</th>
+			<th>State</th>
+			<th>Zip Code</th>
+			<th>Phone #</th>
+		</tr>
+
+		<? if (isset($error)): ?>
+			<p> <?= $error ?> </p>
+		<? endif; ?>
+
+
+  		<?php foreach ($addressBook as $key => $contact): ?>
+			
+			<tr>
+				<?php foreach ($contact as $value): ?>
+					<td><?= htmlspecialchars(strip_tags($value)) ?></td>
+				<?php endforeach ?>
+ 				<td><a href="?id=<?=$key?>"> REMOVE </a> </td>
+			</tr>	
+		<?php endforeach ?>
+			</tr>
+
+		
+
+<!-- 		<tr>
+			<td>Jason</td>
+			<td>8706 Queen Heights</td>
+			<td>San Antonio</td>
+			<td>Texas</td>
+			<td>78254</td>
+			<td>2104158261</td>
+		</tr> -->
+
+	</table>
+
+	<h2>Input Contact Information</h2>
+
+	<form method="POST" action="/address_book.php">
+	    <p>
+	        <label for="name">Name</label>
+	        <input id="name" name="name" type="text" placeholder="John Doe">
+	    </p>
+	    <p>
+	        <label for="address">Address</label>
+	        <input id="address" name="address" type="text" placeholder="123 Main Street">
+	    </p>
+	    <p>
+	        <label for="city">City</label>
+	        <input id="city" name="city" type="text" placeholder="San Antonio">
+	    </p>
+	    <p>
+            <label>State: <span>*</span></label><br/>
+        	<select name="state" class="form-control">
+	            <option value="AL">AL</option>
+	            <option value="AK">AK</option>
+	            <option value="AZ">AZ</option>
+	            <option value="AR">AR</option>
+	            <option value="CA">CA</option>
+	            <option value="CO">CO</option>
+	            <option value="CT">CT</option>
+	            <option value="DE">DE</option>
+	            <option value="DC">DC</option>
+	            <option value="FL">FL</option>
+	            <option value="GA">GA</option>
+	            <option value="HI">HI</option>
+	            <option value="ID">ID</option>
+	            <option value="IL">IL</option>
+	            <option value="IN">IN</option>
+	            <option value="IA">IA</option>
+	            <option value="KS">KS</option>
+	            <option value="KY">KY</option>
+	            <option value="LA">LA</option>
+	            <option value="ME">ME</option>
+	            <option value="MD">MD</option>
+	            <option value="MA">MA</option>
+	            <option value="MI">MI</option>
+	            <option value="MN">MN</option>
+	            <option value="MS">MS</option>
+	            <option value="MO">MO</option>
+	            <option value="MT">MT</option>
+	            <option value="NE">NE</option>
+	            <option value="NV">NV</option>
+	            <option value="NH">NH</option>
+	            <option value="NJ">NJ</option>
+	            <option value="NM">NM</option>
+	            <option value="NY">NY</option>
+	            <option value="NC">NC</option>
+	            <option value="ND">ND</option>
+	            <option value="OH">OH</option>
+	            <option value="OK">OK</option>
+	            <option value="OR">OR</option>
+	            <option value="PA">PA</option>
+	            <option value="RI">RI</option>
+	            <option value="SC">SC</option>
+	            <option value="SD">SD</option>
+	            <option value="TN">TN</option>
+	            <option value="TX">TX</option>
+	            <option value="UT">UT</option>
+	            <option value="VT">VT</option>
+	            <option value="VA">VA</option>
+	            <option value="WA">WA</option>
+	            <option value="WV">WV</option>
+	            <option value="WI">WI</option>
+	            <option value="WY">WY</option>
+	        </select>
+	    </p>
+	    <p>
+	        <label for="zip">Zip</label>
+	        <input id="zip" name="zip" type="text" placeholder="12345">
+	    </p>
+	    <p>
+	        <label for="phone">Phone</label>
+	        <input id="phone" name="phone" type="text" placeholder="2105551234">
+	    </p>
+	    <p>
+	        <input type="submit">
+	    </p>
+	</form>
+
+
+</body>
+</html>
